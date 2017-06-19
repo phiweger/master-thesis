@@ -1,0 +1,161 @@
+\section{Methods}
+% https://www.ncbi.nlm.nih.gov/pubmed/15447808
+
+\subsection{Data Provenance}
+
+We obtained sequence data for all available \gls{iav} samples in the NCBI Influenza Virus Resource as of 2017-03-01~\cite{Bao2008-kb}. Samples were included if the complete coding sequence of all 8 IVA genome segments was available, yielding a total of about 25k samples.
+
+The Ebola data is a collection gathered from a variety of sources and made public by the nextflu (now nextstrain) project~\cite{Neher2015-vn}.
+
+
+\subsection{Codon Usage and its Deoptimization}
+
+Informally, we can deoptimize/ recode a given genome region (here the NA segment of IAV) by targeting codons that are rarest in the organism's genome. The deoptimized sequences were provided ``as-is'' by D. Kunec, Freie Universität Berlin, Institute of Virology. They were created following a previously published protocol (see supplementary information in \cite{Coleman2008-nm}). Note that codon pairs are deoptimized instead of codons.
+
+The rationale behind the design of the deoptimization ``types'' (high, low etc., see Table \ref{tab:deopt-experiments}) was as follows: Assuming that underrepresented codon pairs are responsible for virus attenuation, and each underrepresented codon pair only makes a small contribution to the overall attenuation, then the number of underrepresented codon pairs (= the level of codon pair deoptimization) should correlate with viral attenuation.
+
+Codon pair deoptimization was measured with the average \gls{cpb} of the recoded region \cite{Mueller2006-fz, Coleman2008-nm}. Two levels of deoptimization of the NA gene were included in the design: First, NA with a maximized deoptimization and CPB scores around -0.45. Second, NA subject to medium deoptimization and a CPB around 0.22 (the CPB of the wild type is 0). We provide the full sequences alongside extensive metadata in the appendix.
+
+
+\subsection{Machine Learning}
+
+We employed supervised and unsupervised techniques of what is commonly referred to as ``machine learning''. For supervised methods, we employed standard training procedures, reserving at least 20\% of the data for a test set unseen during training. The respective algorithms were tuned using grid parameter search, where all combinations of a parameter set are tried out during training, one after another, selecting the best combination based on the results of 10-fold cross-validation. In the appendix we provide the associated source code, which does contain the final parameter settings.
+
+
+\subsubsection{Principal Components Analysis}
+
+For unsupervised analyses we employed \gls{pca}. It is a statistical method that by an orthogonal transformation converts observations from an n-dimensional space into a set of linearly uncorrelated variables, called principal components~\cite{Pearson1901-ul}. These components are ranked by variance, and by selecting the first m components we reduce the dimensionality of the original problem from n to m.
+
+
+\subsubsection{Support Vector Machines}
+
+We further employed two supervised learning techniques for supervised classification. \gls{svm} construct a set of hyperplanes in a highdimensional space. These are adjusted so as to maximize the distance between points of a particular class (also called functional margin) \cite{Cortes1995-eq}. The larger the margin the lower the generalization error.
+
+
+\subsubsection{Gradient Boosting Trees}
+
+\gls{gbt} build a prediciton model from an ensemble (i.e. collection) of weaker prediction models. These so-called ``weak learners'' are typically decision trees. The aggregate model is build iteratively based on these weak learners while it optimizes an arbitrary objective function ~\cite{Friedman2009-mc, Friedman2001-rh, Breiman2004-za}.
+
+Both techniques - SVM and GBT - rank among the most performant/ ``best'' machine learning techniques. SVMs are usually employed when the main objective is predictive accuracy, but they are quite opaque as to the internals of the training procedure. GBTs are less of a ``black box'' and one can examine how they learn data. To assess the contribution of each feature (variable) in the \gls{gbt} model, we can calculate a measure called \gls{fi}. It is based on the number of times a feature is selected for splitting in a weak learner (decision tree), weighted by the reduction in the loss function as a result of each split, and averaged over all learners/ trees~\cite{Elith2008-xp}. In short, it is an estimate of how ``valuable'' a feature is in the prediction, where 0 means it is redundant. \gls{fi} is unitless.
+
+This is why we opted for an SVM when our interest lay in prediction, while using GBTs when we needed access to the learned feature importances. For all tree techniques we used available implementations in the Python library scikit-learn~\cite{Pedregosa2011-yy}.
+
+
+\subsection{Sequence Transformation}
+
+The raw sequence data has to be transformed so that it can be used as input to machine learning algorithms. Typically, one needs to engineer some kind of ``
+feature'' matrix that represents the learning problem. Note that techniques such as neural networks can learn this feature embedding without a priori feature specification, but we did not explore this class of algorithm in this thesis.
+
+
+\subsubsection{Multiple Sequence Alignment}
+
+First, the set of sequences were transformed into a \gls{msa} to provide a common coordinate system. For the MSA we used the Mafft software \cite{Katoh2016-yq, Katoh2002-in, Katoh2013-eh}. However, we wanted codons to align as well through a so-called codon-based MSA, for which three steps were necessary:
+
+
+\begin{itemize}
+    \item translate codons to amino acid
+    \item align using Mafft
+    \item backtranslate into nucleotides
+\end{itemize}
+
+
+The corresponding source code is listed in the appendix. We generated the codon-based MSA with the following command:
+
+
+\begin{lstlisting}[language=bash]
+python codon_msa.py example.fa --align 'linsi' --align_option=''
+\end{lstlisting}
+
+
+\subsubsection{Entropy calculation}
+
+Given an MSA, we calculated the Shannon entropy of a position in the alignment by first calculating each nucleotide's frequency at that position. Entropy was then calculated from those ``probabilities'' $x_i$ using equation \ref{eq:entropy}.
+
+
+\begin{equation}
+H(X) = -\sum{p(x_i)\ log(p(x_i))}
+\label{eq:entropy}
+\end{equation}
+
+
+\subsubsection{Encoding DNA}
+
+As mentioned above most machine learning techniques require a particular representation of the problem. This means that DNA sequences cannot be used ``raw'' as input to these algorithms.
+
+DNA sequences were represented as count data in the experiments involving PCA and SVM. We created a hash map where the keys were k-mers (di- and trinucleotides, the latter in and out of frame). The hash map values were set to the normalized count of the k-mers.
+
+GBTs on the other hand work best with sparse binary matrices. Therefor we ``one-hot encoded'' the DNA sequence string in the following manner: Given an alphabet of size $|a|$ (e.g. for nucleotides \{A, C, T, G\}, $|a| = 4$), each element is represented as a binary vector of length $|a|$. Each position $p$ in a sequence string yields a vector of 4 integers $\in \{0, 1\}$ with one element set to 1 and all others to 0 indicating presence and absence of the alphabet's set members at $p$ (Equation \ref{eq:one-hot}). By convention, each element in these vectors is called a ``feature''. The feature vectors are then concatenated.
+
+
+\begin{equation}
+\textrm{A\ C\ T\ G\ A\ T}
+\rightarrow
+\begin{bmatrix}1&0&0&0&1&0\\0&1&0&0&0&0\\0&0&1&0&0&1\\0&0&0&1&0&0\end{bmatrix}\\
+\rightarrow
+\begin{bmatrix}1 & 0 & 0 & 0 & 1 & 0 & \dots \end{bmatrix}
+\label{eq:one-hot}
+\end{equation}
+\vspace{0.5cm}
+
+
+A sequence of $n$ characters is therefor represented as a sparse vector of $4n$ binary features. Note that this constrains the length of the sequence we want to encode: A sequence of 1k nucleotides generates 4k features for which we need > 10k samples to make a sensical classification. We found this rule of thumb to work well in practice, but did not formally test it. However, GBTs handle sparse data well and regularize implicitly, i.e. superfluous features are shrunken towards 0, limiting the risk to overfit (and thus making GBTs a method that generalizes well).
+
+As a last step, each (concatenated) vector for each of $s$ sequences in the training data set is collected in a matrix of dimensions $s \times 4n$.
+
+
+\subsection{Components of zoo - an Effective Data Structure}
+
+\subsubsection{Database Engine}\label{database-engine}
+
+As a storage backend for zoo we chose a NoSQL database, namely MongoDB. The term ``NoSQL'' can refer to ``non SQL'', ``non relational'' or ``not only SQL''. It commonly describes a data model that is different from the tabular one used by relational databases. The value proposition of these databases is that they are schema free, i.e. they put no restictions on the form of the data that can be stored. However, schema free is incorrect, rather the schema is implicit in the data being stored (typically in JSON format). With NoSQL databases, one gains flexibility and performance at the cost of a rich query logic such as SQL or Datalog. An additional disadvantage is efficiency, because data normalization is only possible to a limited degree, which implies that data is stored redundantly. However, with the current hardware this is usually not a constraint. The main selling point for us was the schema flexibility because most viral datasets are unstructured to at least some degree.
+
+Viral sequence and metadata is often ddistributed across multiple archives (EMBL, JGI, NCBI) while more specific information (e.g. annotations) rests in small, laboratory-hosted repositories. To comprehensively model an entity such as a gene, we have to integrate many heterogenous sources. Additionally, keeping the data up to date is a challenge, not ameliorated by hassles such as limited download quotas for automated scripts and regular outages. Once we have collected the necessary information it makes sense to organize it locally for reuse in a NoSQL store.
+
+MongoDB is centered around a ``document'' which is a file in JSON format with a few extra types to represent dates, geolocations and large binary data. Documents are nested hash maps, which is a very natural representation for much of the viral data we encounter. Although a document's schema is implicit, we can nevertheless validate input on entry. The zoo wiki at \hyperlink{https://github.com/viehwegerlib/zoo}{github.com/viehwegerlib/zoo} documents this extensively and provides exemplary schema templates.
+
+From a developer's point of view, MongoDB is by far the most widely used NoSQL store and provides stable tooling. Other current projects in computational biology have successfully employed NoSQL stores~\cite{Neher2015-vn}. JSON is one of the most widely adopted exchange formats with a whole range of efficient parsers and libraries.
+
+
+\subsubsection{Peer-to-Peer File Sharing and the Distributed Web}
+
+zoo allows effective data sharing over \gls{p2p} protocols. In a Distributed Web (P2P) model, all nodes are clients and servers at the same time, i.e. those who are downloading the data are at the same time providing bandwidth and storage for the network. Because there are many servers instead of one, more peers means a more redundant, safer, and faster network. Currently there are 2 major implementations of this idea, namely the \gls{dat} and the \gls{ipfs}, each with its own strengths and weaknesses.
+
+IPFS offers a file system that is embedded in a P2P network. It is like one big shared folder. It addresses objects not by a place-bound identifier (as the HTTP protocol currently does via URLs). Instead IPFS uses an object's content hash as its globally unique identifier, from which desirable properties such as implicit deduplication, version control and integrity checks derive.
+
+
+\begin{quotation}
+    \emph{When you have IPFS, you can start looking at everything else in one specific way and you realize that you can replace it all. -- Juan Benet}
+\end{quotation}
+
+
+The Dat protocol operates in a similar manner. In both cases, collaborators can upload data to the network and receive a content-based hash address, which can then be shared with collaborators, who can in turn download the content associated with the link.
+
+``Offline-first'' is a way of thinking about programs and systems which influences how we design them. It implies that given a program that does at least part of its work over the web, we should be able to continue work even though the connection is lost or brittle. We can achieve this by e.g. storing relevant data on the client side and pushing changes to a server only once a stable connection gets established. All current large nucleotide sequence databases (NCBI, EBI) do not offer this. zoo's design is built around the offline-first mantra.
+
+
+\subsubsection{Probabilistic Data Structures: Minhash, Sequence Bloom Trees}
+
+As the cost of sequencing drops, the challenge shifts from data generation to analysis. To implement efficient genome surveillance~\cite{Schatz2012-ju}, we need the ability to query large collections of sequences with only limited resources. zoo provides this function with a dimension reduction technique called Minhash. First a query sequence and a reference collection are transformed into Minhash signatures. These signatures are compact representations of the underlying sequences while approximately retaining pairwise similarity.
+
+The Minhash procedure was discovered in an effort to draw a uniform sample from a data stream, when the length of the stream is not known in advance and potentially infinite. Formally we want to sample from the support set of distinct items in the stream. This problem was first addressed with a technique called ``Reservoir sampling''~\cite{cormode2007-cp} and further developed in min-wise sampling~\cite{Nath2004-uf}. Combining this sampling scheme with hashing led to the development of min-wise hashing, or Minhash for short, initially in the context of web search~\cite{Broder2000-zj, Broder1997-dr}.
+
+The key property of the Minhash procedure is that the hashed signatures of any two sequences retain the pairwise (Jaccard) similarity of the underlying sequence pair~\cite{Leskovec2014-gb}. This ``compression'' enables huge gains in computational efficiency, because the similarity calculations are carried out on the signatures which are usually only a few hundred to thousand integers in size. Typical datasets can be reduced by a constant size (approximately 10,000-100,000-fold)~\cite{Ondov2016-sl}. A Minhash signature is created in the following manner:
+
+
+\begin{enumerate}
+    \item Decompose a sequence into ``k-shingles'', which in the context of DNA correspond to unique, canonical k-mers, where canonical means the lexicographically smaller of a k-mer and its reverse complement (yields strand-independent).
+    \item These shingles are then hashed into unsigned integers of 32 or 64 bits (k-mers up to 16 nt can be represented using uint32), usually using the non-cryptographic MURMUR3 hash function.
+    \item From these hashes, a sample is drawn in usually one of three ways, each with its advantages and disadvantages~\cite{Wang2014-ry, Cohen2016-sa}. We use the variation called ``bottom-k sketch'', where k denotes the sketch size. To avoid confusion with the parameter k for k-mer size, we hereafter use s to denote sketch size.
+\end{enumerate}
+
+Bottom-k sketches correspond to sampling s k-mers from a given sequence without replacement. A sketch can be updated in O(1), which makes it very suitable for streaming data use cases. This is because a sketch is stored as a sorted list, with updates using merge-sort.
+
+zoo uses the Minhash implementation provided by the Sourmash Python library and command line tools~\cite{Brown2016-gd}, which provide functionalities to compute minhashes, index SBTs and additionally provides a ``gather'' functionality. Through this technique complex communities such as soil metagenomes can be compared and taxonomically classified without assembly~\cite{Brown2016-fu}. Alternative Minhash implementations targeting bioinformatic use cases include ``mash''~\cite{Ondov2016-sl} and ``rkmh''.
+
+The Minhash approach to similarity estimation runs into scalability problems when the number of sequences n is large, in which case the number of pairwise comparisons $n \choose 2$ explodes. For a million sequences there are half a trillion possible pairs. In order to address this all-against-all comparison problem, a technique called LSH was developed~\cite{Gionis1999-dz}, with subsequent optimizations such as LSH ensemble~\cite{Zhu2016-tu}. LSH is a nearest-neighbor search technique, that seeks to ``amplify'' the similarity between two sets, thereby reducing the dimensionality of the search space. A similarity threshold is choosen such that pairs of signatures above the threshold are hashed into the same bucket, while datasets below the threshold are not. Since we are technically not really hashing but concatenating hash functions into ``bands'', this technique has also been described as a ``meta-hash''~\cite{Shrivastava2015-oa}.
+
+One disadvantage of the bottom-k Minhash variant is the loss of randomness in the hash signatures, because we deterministically pick the s smallest ones. Because of this, we cannot use LSH to index the signatures. However, an alternative indexing method called \gls{sbt} was recently developed.
+
+SBTs create a sequence index. They support queries of large sequence collections on the order of terabyte~\cite{Sun2016-gi, Solomon2015-dh}. The index design was initially motivated by querying large collections of reads in the \gls{sra} where huge amounts of sequence data (5 TB of RNAseq experiments) were indexed with very little disk space (70 GB) and memory (less than 1 GB) in under 3 days. SBTs can be used with a wied range of sequence types, such as Minhash signatures.
+
+All sequences in an SBT are assigned to leaves of a tree. The internal nodes of the tree are implemented as Bloom Filters (BF)~\cite{Bloom1970-ey} which represent all the associated leaves as a bit array. Because a Bloom Filter is a probabilistic data structure, SBTs are too, and all the properties of BFs apply, i.e. when we query the SBT for set membership of a query sequence we are guaranteed to not get false negative hits with a tunable false positive rate~\cite{Broder2004-ya}. We use the SBT implementation provided by the Sourmash package~\cite{Brown2016-gd}.

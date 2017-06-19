@@ -1,0 +1,205 @@
+% General document formatting
+\usepackage[margin=1.2in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}
+\linespread{1.5} % https://texblog.org/2011/09/30/quick-note-on-line-spacing/
+
+% Related to math
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{bm} % tex.stackexchange, 61593
+
+
+% font
+% name: Computer Modern Typewriter Proportional ("cmvtt")
+% http://www.tug.dk/FontCatalogue/computermoderntypewriterproportional/
+\renewcommand*\ttdefault{cmvtt}
+\renewcommand*\familydefault{\ttdefault}
+% Only if the base font of the document is to be typewriter style
+\usepackage[T1]{fontenc}
+
+
+% bibtex
+% http://www.bibtex.org/Using/de/
+\usepackage{cite}
+
+
+% figures
+\usepackage{graphicx}
+\graphicspath{{img/}}
+% can be a relative path
+% multiple sources: \graphicspath{{img1/}{img2/}
+% https://tex.stackexchange.com/questions/139401/how-to-use-graphicspath
+\usepackage{float} % tex.stackexchange, 8625
+\usepackage{sidecap} % for side captions
+% https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
+\sidecaptionvpos{figure}{t}
+% align vertical captions with top of figure
+% tex.stackexchange, 75931
+
+
+% define colours
+% colour codes from R's bayesplot package
+% on how to define color: https://en.wikibooks.org/wiki/LaTeX/Colors
+\usepackage{xcolor}% http://ctan.org/pkg/xcolor
+\definecolor{red-light}{HTML}{DCBCBC}
+\definecolor{red-mid}{HTML}{B97C7C}
+\definecolor{red-dark}{HTML}{8F2727}
+\definecolor{red-very-light}{HTML}{F6EEEE}
+% enter some colour and e.g. get a lighter version of it
+% https://www.w3schools.com/colors/colors_picker.asp
+
+
+% section colour
+% tex.stackexchange, 68376, is-it-possible-to-change-text-color-for-all-headings
+\usepackage{sectsty} % http://ctan.org/pkg/sectsty
+\sectionfont{\color{red-light}}
+\subsectionfont{\color{red-mid}}
+\subsubsectionfont{\color{red-dark}}
+
+
+% copied from random forest thesis
+\usepackage[english,german]{babel}
+\frenchspacing
+
+% tex.stackexchange, 21983
+\raggedbottom
+\widowpenalties 1 10000 % avoid that only one line gets printed on the next page
+% \clubpenalties % seems to be related, but no idea
+% \clubpenalty 10000
+%  https://tex.stackexchange.com/questions/309522/when-using-widowpenalty-and-clubpenalty-how-can-i-prevent-spacing-increasing
+
+% \selectlanguage{american}
+\pagenumbering{roman}
+\pagestyle{plain}
+
+
+\usepackage{scrextend} % \addmargin command
+% \usepackage{classicthesis}
+
+
+% table of contents
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*}{\section}{}{}
+% tex.stackexchange, 6758, how-can-i-create-a-bibliography-like-a-section
+
+% TOC hyperlinks (to be able to click on item in TOC and navigate there)
+% tex.stackexchange, 73862, how-can-i-make-a-clickable-table-of-contents
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false,
+    % set true if you want colored links
+    linktoc=all,
+    % set to all if you want both sections and subsections linked
+    % linkcolor=black,
+    % anchorcolor=black,
+    % citecolor=black,
+    % filecolor=black,
+    % menucolor=black,
+    % runcolor=black,
+    % urlcolor=gray
+    % choose some color if you want links to stand out
+    % tex.stackexchange, 50747
+}
+
+
+% tables
+\usepackage{caption} % https://en.wikibooks.org/wiki/LaTeX/Tables
+% \captionsetup{belowskip=12pt,aboveskip=4pt}
+% tex.stackexchange, 26220
+\captionsetup{width=0.75\textwidth} % tex.stackexchange, 39147
+
+% \usepackage{makecell} % tex.stackexchange, 267770
+% \usepackage{multirow}
+\usepackage{tabularx} % tex.stackexchange, 166743
+
+
+% abbreviations
+% https://texblog.org/2014/01/15/glossary-and-list-of-acronyms-with-latex/
+\usepackage[acronym,nomain]{glossaries}
+\renewcommand*{\glsgroupskip}{} % 4183
+% By default, glossary groups terms by letter, which looks odd with only a
+% couple of acronyms.
+
+% Acronym definitions
+\makeglossaries
+\newacronym{iav}{IAV}{Influenza A Virus}
+\newacronym{pca}{PCA}{Principal Components Analysis}
+\newacronym{svm}{SVM}{Support Vector Machines}
+\newacronym{ml}{ML}{Machine Learning}
+\newacronym{gbt}{GBT}{Gradient Boosting Trees}
+\newacronym{sbt}{SBT}{Sequence Bloom Tree}
+\newacronym{cepi}{CEPI}{Coalition for Epidemic Preparedness Innovations}
+\newacronym{promed}{ProMED}{Program for Monitoring Emerging Diseases}
+\newacronym{p2p}{P2P}{Peer-to-peer}
+\newacronym{dat}{Dat}{Decentralized Archive Transport}
+\newacronym{ipfs}{IPFS}{Interplanetary File System}
+\newacronym{lsh}{LSH}{Locality-Sensitive Hashing}
+\newacronym{sra}{SRA}{Sequence Read Archive}
+\newacronym{rdrp}{RdRp}{RNA-dependent RNA-polymerase}
+\newacronym{msa}{MSA}{Multiple Sequence Alignment}
+\newacronym{cpb}{CPB}{Codon Pair Bias}
+\newacronym{fi}{FI}{Feature Importance}
+\newacronym{orf}{ORF}{Open Reading Frame}
+\newacronym{cli}{CLI}{Command Line Interface}
+\newacronym{tsne}{t-SNE}{t-Distributed Stochastic Neighbor Embedding}
+\newacronym{na}{NA}{Neuraminidase}
+\newacronym{api}{API}{Application Programming Interface}
+
+
+
+
+% source code
+\usepackage{listings} % \usepackage{minted}
+% https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+% https://github.com/gpoore/minted
+% pip install pygments
+
+% https://de.sharelatex.com/learn/Code_listing#/The_verbatim_environment
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{red-very-light},
+    commentstyle=\color{codegray},
+    keywordstyle=\color{black},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{black},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+% how to background color inline listing
+% tex.stackexchange, 28179, colored-background-in-inline-listings
+% \colorbox{red-very-light}{\lstinline{A=1}}
+
+
+% bibtex related
+% \usepackage{natbib} % https://de.sharelatex.com/learn/natbib_citation_styles
+\bibliographystyle{acm} % plain, ...
+
+
+% lists
+\usepackage{enumitem} % tex.stackexchange, 129951
+
+
+% figures
+% sideways figure, tex.stackexchange, 101645
+% note to not include options like [H] bc/ the figure is likely so large
+% that it needs to "float" to a new page
+\usepackage{rotating}
+
+% tex.stackexchange, 22191
+% \usepackage{afterpage}

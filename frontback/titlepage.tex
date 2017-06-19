@@ -1,0 +1,104 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University Assignment Title Page
+% LaTeX Template
+% Version 1.0 (27/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Instructions for using this template:
+% This title page is capable of being compiled as is. This is not useful for
+% including it in another document. To do this, you have two options:
+%
+% 1) Copy/paste everything between \begin{document} and \end{document}
+% starting at \begin{titlepage} and paste this into another LaTeX file where you
+% want your title page.
+% OR
+% 2) Remove everything outside the \begin{titlepage} and \end{titlepage} and
+% move this file to the same directory as the LaTeX file you wish to add it to.
+% Then add \input{./title_page_1.tex} to your LaTeX file where you want your
+% title page.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+% Defines a new command for the horizontal lines, change thickness here
+
+\center
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+    University Leipzig\\
+    Bioinformatics\\
+    Faculty of Mathematics\\
+    and Computer Science\\[2cm]
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\huge \bfseries Master Thesis
+\end{flushright}
+\end{minipage}\\[3cm]
+
+
+\color{red-light}\HRule\\[0.5cm]\color{black}
+
+\center
+\textsc{\LARGE \color{red-dark}
+    Host prediction in RNA viruses\color{black}}\\
+\textsc{\large \color{red-mid}
+    A foray into machine learning\\and data management\color{black}}\\[0.4cm]
+
+\color{red-light}\HRule\\[3cm]\color{black}
+
+
+\center
+
+% minipage [t] option to align vertically
+% tex.stackexchange, 81955, align-text-in-minipage-at-same-height
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Adrian \textsc{Viehweger}
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+Prof. Manja \textsc{Marz}\\[0.5cm]
+University Jena\\
+Bioinformatics\\
+Faculty of Mathematics\\and Computer Science
+\end{flushright}
+\end{minipage}\\[3cm]
+
+
+\selectlanguage{english}
+% from babel package, format: May 28, 2017
+{\large \today}\\[3cm]
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}

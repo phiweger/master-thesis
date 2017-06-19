@@ -1,0 +1,56 @@
+\documentclass[a4paper,10pt]{article}
+
+\input{config.tex}
+% https://tex.stackexchange.com/questions/40144/how-to-use-inputfile-tex-correctly
+% https://tex.stackexchange.com/questions/246/when-should-i-use-input-vs-include
+
+\begin{document}
+
+% https://www.informatik.uni-leipzig.de/lehre/pruefamt/HINWEISE_Dipl_BSc_MSc_Arbeit_.pdf
+
+% 1. Deckblatt
+% 2. Inhaltsverzeichnis
+% 3. Text (mit Einleitung und Auswertung der gewonnenen Ergebnisse)
+% 4. Kurzzusammenfassung
+% 5. Literaturverzeichnis
+% 6. Anlagenverzeichnis
+% 7. Anlagen
+% 8. Erklärung
+
+% front matter
+\include{frontback/titlepage}
+\cleardoublepage\input{frontback/acknowledgments.tex}
+% a summary is provided instead of an abstract
+% \cleardoublepage\input{chapters/abstract.tex}
+\selectlanguage{english}
+% \setcounter{tocdepth}{2} % tex.stackexchange, 61033
+
+\cleardoublepage\printglossaries
+\cleardoublepage\listoffigures
+\cleardoublepage\listoftables
+\cleardoublepage\tableofcontents
+% https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions#Captions
+
+\cleardoublepage
+
+
+% Content
+\pagenumbering{arabic}
+
+\cleardoublepage\input{chapters/intro.tex}
+\cleardoublepage\input{chapters/methods.tex}
+\cleardoublepage\input{chapters/results.tex}
+\cleardoublepage\input{chapters/discussion.tex}
+\cleardoublepage\input{chapters/summary.tex}
+\cleardoublepage\input{chapters/epilogue.tex}
+
+
+% https://www.sharelatex.com/learn/Bibtex_√bibliography_styles
+\cleardoublepage\bibliography{lib.bib}{}
+
+
+\cleardoublepage\input{chapters/appendix.tex}
+\cleardoublepage\include{frontback/disclaimer}
+
+
+\end{document}

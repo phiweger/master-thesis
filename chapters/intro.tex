@@ -1,0 +1,88 @@
+\section{Introduction}
+
+
+\begin{quotation}
+    \emph{After a period of naive optimism, when we thought infectious diseases had been conquered, the stark realisation dawns upon us that these remain the largest cause of death in the world [...].}~\cite{De_Kruif2002-ra}
+\end{quotation}
+
+
+\subsection{Emerging Infectious Diseases}
+
+Infectious diseases, whether they be caused by \includegraphics[scale=0.01]{i3.jpg}, \includegraphics[scale=0.01]{i4.jpg} or \includegraphics[scale=0.01]{i5.jpg}, are a growing burden on global economies and public health \cite{Nichol2000-hn, Smith2014-km}, largely due to socio-economic, environmental and ecological factors \cite{Smith2007-sg, Jones2008-mw}, many of which characterize our ``modern times''. Consider the intensification of crop and animal farming and the growing international trade therein. Or think of the growing human population, international mobility~\cite{Bryant2007-lr} and the continuing urbanization and deforestation. These factors share a common denominator in that humans move into close and continuous contact with animals and their pathogens.
+
+This proximity facilitates the transmission of zoonoses~\cite{Wolfe2007-iy, Wolfe2011-sl}, i.e. diseases caused by pathogens that spread from animals to humans \cite{Jones2008-mw}. Zoonoses constitute roughly 60\% of human infections~\cite{Quammen2013-ox}. They start from an initial ``spillover'' where a pathogen crosses the host boundary (e.g. from ape to human). They can propagate into an outbreak,  where the number of cases of disease increases above what would normally be expected in a defined community, geographical area or season \cite{Smith2014-km}.
+
+A zoonosis can subsequently continue in degrees of severity from an epidemic to a pandemic to an endemic, which means that the disease now circulates within a human population without the need for an animal reservoir. For example HIV has been introduced into human populations at least on three different occasions~\cite{Holmes2009-cu}. Ebola outbreaks on the other hand are a more frequent albeit locally constrained occurence~\cite{Quammen2014-lg}. However, these outbreaks can spread given the ``right'' conditions~\cite{Holmes2016-wm, Dudas2017-ku}.
+
+Many of those zoonoses are emergent~\cite{Wolfe2007-iy}, i.e. they are the first temporal origination of the infection in any human population~\cite{Smith2014-km}. And they are many: One study for examples lists 335 emergent infectious diseases between 1940 and 2004 in humans alone~\cite{Smith2014-km}. Plants~\cite{Elena2011-lx, Hanssen2010-ep, Navas-Castillo2011-lj} and animals from bees to birds are affected at a growing rate, too~\cite{Weaver2010-zg}. More generally, the term ``emergent'' also refers to newly evolved strains of known pathogens such as multi-drug-resistant Mycobacterium tuberculosis and it includes pathogens that have likely been present in humans for a long time, but whose incidence has only recently increased, e.g. Lyme disease \cite{Jones2008-mw}.
+
+Interestingly, many zoonoses are caused by RNA viruses, arguably because of their high mutation rate and flexible genome structure, which lets them adapt quickly to a new host environment. \gls{iav} is a classic example of this. New IAV strains can emerge in a process called reassortment~\cite{Holmes2005-wg}: Because the IAV genome is segmented, coinfection of a host cell with more than one Influenza strain can lead to an exchange of segments between strains at the moment that the virions assemble. The resulting virus particles have undergone a so-called antigenic shift, towards which most human populations have not acquired immunity~\cite{Worobey2014-zp, Rambaut2008-pm}. It is thought that this phenomenon led to ``the mother of all epidemics'' in 1918 - 1920, in which an emergent IAV reassortant killed around 50 million people worldwide~\cite{Taubenberger2012-qi, Taubenberger2006-do}. Note that besides antigenic shift, antigenic drift through mutation plays a large role in shaping immunity as well ~\cite{Bedford2014-he, Bedford2015-vu}.
+
+
+\subsection{A Deep Reservoir}
+
+Why do we not simply predict the next outbreak of an emergent infectious disease? To be able to do this, knowledge of most or all microorganisms in existance is required. Initial surveys have revealed a tremendous amount of diversity, especially in the virosphere and especially in RNA viruses, where hundreds of new virus species have been discovered over the last few years~\cite{Pesant2015-yq, Brum2015-tv, Shi2016-rt, Paez-Espino2016-ej}. Large consortia such as the Global Virome Project to carry out more systematic surveys of the virosphere. On the negative side (for us humans that is, the universe doesn't care), the reservoir of potential emerging diseases seems to be very deep. This makes novel outbreaks in the future a near certainty.
+
+
+\subsection{Old Needs: Vaccines and Data}
+
+We think that there are two lines of work that could address the threat of emerging infectious diseases: One of them is agile vaccine development methods, where agile means the ability to adapt a vaccine quickly to a pathogen. This pathogen could either have emerged recently or experienced substantial genomic changes. Second, we think there is a big need for integrative data management systems that link data in a way that makes it easy to share and facilitates pattern recognition.
+
+
+\subsubsection{Vaccines from Codon Deoptimization}
+
+The most effective tool we currently have for the prevention of viral diseases are vaccines. Projects like the \gls{cepi} adopt this as their primary strategy and target diseases like MERS-Coronavirus, Lassa and Nipah viruses. These viruses are likely to cause outbreaks in the future, and the idea is to anticipate this with viable vaccine candidates.
+
+But designing vaccines is a very demanding endeavour. One method with the potential to constitute a new vaccine technology is ``codon deoptimization''. In theory, it allows the rapid creation of attenuated viruses as vaccine agents. The main idea codon deoptimization is based a simple observation: Most species exhibit a so-called ``codon bias'' (see below). The deoptimization of this bias can attenuate certain virus species.
+
+To understand codon bias, note that the genetic code is degenerate, i.e. there is a one-to-many mapping between amino acids and codons. Codons that encode the same amino acid are called ``synonymous''. These synonymous codons are not equally frequent in most organisms' genomes. For example, the 4 different codons for alanine are not used with 0.25 probability each, but they have a skewed or ``biased'' distribution~\cite{Plotkin2011-nk}. The term bias can also refer to a codon count distribution (= codon ``usage'') that deviates from a reference sequence. Various measures exist for codon bias, e.g. \gls{cpb}, relative abundance or adaptation index, among others~\cite{Mueller2006-fz, Coleman2008-nm, Kunec2016-ri}.
+
+Why codon bias exists is debated: For viruses one plausible hypothesis proposes that the virus mimicks the host's codon bias for reasons of replicative efficiency \cite{Wong2010-sy}. For example, t-RNAs are distributed in accord with the hosts codon bias. Viruses depend on those t-RNAs as part of the host's replication machinary. So from a fitness perspective it makes sense for a virus to adapt to its host's codon bias. Note that this hypothesis has recently received some critique~\cite{Komar2016-qx}.
+
+It has been show that altering certain positions in a viral genome can have large effects on factors such as virulence and replication efficiency~\cite{Brault2007-wb}. This observation led Coleman et al. to test whether an artificial shift in a virus'es codon usage would have similar effects. They were able to demonstrate substantial attenuation for Polio virus in mice \cite{Mueller2006-fz, Coleman2008-nm}. Today, this ``death by a thousand cuts'' strategy has been shown to work well other virus species such as arenavirus \cite{Cheng2017-gu} and Influenza A virus~\cite{Mueller2010-qp, Nogales2014-eq, Fan2015-za}.
+
+These proofs of principle suggest that codon deoptimization could be a new vaccine technology \cite{Plotkin2009-xx}. Intriguingly it allows for the computational design of a vaccines, which can then be synthesized rapidly~\cite{Andries2015-pl, Flingai2013-cf, Endy2005-eo}. However, to adopt this method in production, one key doubt needs to be resolved: A remutation of an attenuated virus into the virulent wildtype must be a near impossibility~\cite{Bull2015-fr}.
+
+However, the exact mechanism of why codon optimization works is unclear and remains debated, largely because of interaction effects: If we change one codon, we invariably modify two dinucleotides, which makes it difficult to untangle which of those changes is responsible for the observed effect~\cite{Kunec2016-ri, Di_Giallonardo2017-lv}. Furthermore, there are many genome changes that the deoptimization introduces. How much does an individual locus contribute to the effect? It is not implausible that only one or two relevant loci are modified in a sea of ``noise modifications''. To stress Coleman's metaphor, death occurs by a thousand cuts, but only one or two blows are mortal. If that were the case, remutation into virulence is likely. Until we can provide a rationale of why certain nucleotides are changed while others are not, this method is unlikely to be used in clinical vaccine trials.
+
+We approached this issue from a statistical viewpoint: Could we identify loci that are associated with some feature of the underlying genome (such as its host)? We could then prospectively try to deoptimize these loci and observe the effect on virus viability. A drop in viability could in this manner be linked to the feature that led to the deoptimization in the first place, generating a hypothesis about what the deoptimization actually deoptimized. More concretely we formulated the following hypothesis:
+
+
+\begin{enumerate}[label=(\alph*)]
+    \item \gls{iav} is host specific, but can jump the host barrier ``easily'', especially through reassortment. We suspect that there is a host-specific IAV sequence blueprint (which we'll call a ``fluprint''). This fluprint can be discovered through machine learning. Experiments that deoptimize many loci indiscriminatively will change this fluprint. We hypothesize that what these protocols really do is change a virus'es host specificity, resulting in reduced viability. This line of argument has a long history: Early vaccines were nothing but pathogens from a from close disease variant, isolated from a different host. For example, E. Jenner used the cow pox virus to immunize against the human pox virus~\cite{Riedel2005-pt}.
+    \item As a side effect, this inquiry might also elucidate how IAV is able to cross species barriers so frequently. If the constructed fluprint were correct, we should find mixed ``host signals'' in sequences from IAV that are known to have crossed this barrier, e.g. isolates from humans infected with an avian influenza strain.
+\end{enumerate}
+
+
+\subsubsection{Principles for Effective Data Exchange and Curation}
+
+Understanding the spatial and temporal distribution of novel infectious diseases is among the most important and challenging tasks for the coming century~\cite{Smith2014-km}. One of the key lessons from the recent Ebola crises is a need for effective data communication systems. It took over a year from the peak of the outbreak to a comprehensive analysis of the outbreak dynamics~\cite{Dudas2017-ku}, largely in part to scattered data that were kept in silos until publication. This is not good. Public Health crises need quick interventions, which in turn need to be informed by all the available data. This might sound like a far goal, but the technology for real-time pathogen surveillance already exists~\cite{Schatz2012-ju, Gardy2015-ta}.
+
+
+\begin{quotation}
+    \emph{The system of scientific journals and peer review prioritizes findings to be right rather than timely, which is usually not such a bad thing, but in the case of infectious disease outbreaks, science comes to be at odds with public health efforts. [...] We need to pool data to really understand what's going on. -- \hyperlink{http://bedford.io/blog/scientific-publishing-practices/}{T. Bedford}}
+\end{quotation}
+
+
+In the case of Public Health surveillance there is a linear information chain which goes from data gathering, sharing and curation to surveillance and prediction. Among these, data exchange seems to be the most (culturally) demanding. The Chatham House, a UK-based think tank, investigated this and in response defined seven ``Principles for Sharing the Data and Benefits of Public Health Surveillance'' (\hyperlink{https://datasharing.chathamhouse.org/}{datasharing.chathamhouse.org}): building trust, articulating knowledge, planning for data sharing, achieving data quality, understanding the legal context, creating data sharing agreements and monitoring and evaluation.
+
+Not only sharing data is an unsolved problem, but linking different types of data as well. For example, it is currently non-trivial to query sequence data from NCBI through metadata that comes from another source like the \gls{promed}. Relating this query to a phylogenetic tree is even more difficult. This is unfortunate, especially because the limitations are non-technical.
+
+Many large-scale projects recently moved into the space of genomic surveillance and all of them identify data management issues as of strategic importance. What follows is an uncomprehensive list of links:
+
+
+\vbox{% tex.stackexchange, 42851
+\begin{itemize}
+    \item \hyperlink{http://www.compare-europe.eu/}{COMPARE}
+    \item \hyperlink{http://www.vetmed.ucdavis.edu/ohi/predict/index.cfm}{PREDICT}
+    \item \hyperlink{http://www.ecohealthalliance.org/}{EcoHealth Alliance}
+    \item \hyperlink{https://www.globalviral.org/}{Global Viral Forecasting Initiative}
+    \item \hyperlink{http://www.who.int/csr/research-and-development/en/}{WHO blueprint to prevent epidemics}
+    \item \hyperlink{http://www.nextstrain.org/}{nextstrain project}
+\end{itemize}
+}
+
+
+Emergence remains hard to predict, despite advances in mathematical modeling and spatial epidemiology. The question the above initiatives try to answer is whether outbreaks of pathogens, in particular of viruses, are predictable \cite{Howard2012-gd, Huff2016-tm}.
+
+Note that although there is a large overlap in interests and all projects more or less collect the same types of data, there is no communal repository where one could access the combined knowledge of those groups. What is missing is an underlying data architecture. We propose an implementation of just such an architecture, which we call ``zoo''.

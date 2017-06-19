@@ -1,0 +1,95 @@
+\section{Discussion}
+
+
+\subsection{Unsupervised Learning}
+
+For the unsupervised clustering we were able to separate \gls{iav} sequences by their host species. In the future we will investate this further to find out how fine-grained the resulution of these clusters can be. For example, IAV's primary reservoir is thought to be wild birds which then infect (free living) domestic bird species. In our analyses, these two host groups are lumped into one, which is a crude simplification. For these experiments, we will test the \gls{tsne}~\cite{Maaten2008-we}.
+
+Furthermore, we did not model interactions between different k-mers explicitely. For example, if a codon is mutated during deoptimization, two dinucleotides change. We will investigate these interactions through the use of probabilistic graphical models or other related techniques.
+
+
+\subsection{Supervised Learning}
+
+Our supervised machine learning approaches yielded good predictions. However, one property of the input data was not modelleld: There are large interactions between k-mers when one deoptimized a sequence. For example, by changing one position in a codon, 2 dinucleotides are changed. We will employ probabilistic graphical models to try to infer the effects of such changes~\cite{Tran2017-mc, Bishop2013-mq}. We think that this will allow more informative deoptimization simulations, which will result in better target sequences that are then tested in the laboratory. Together with the results on feature importance, we will conduct prospective deoptimization experiments to systematically screen sequence libraries for the most attenuated virus sequence. We hope that in the distant future this work could contribute to the development of new types of vaccines, especially for RNA-viruses.
+
+
+\subsection{Targeted Codon Deoptimization}
+
+In the introduction we stated the following hypothesis:
+
+\begin{enumerate}[label=(\alph*)]
+    \item \gls{iav} is host specific, but can jump the host barrier ``easily'', especially through reassortment. We suspect that there is a host-specific IAV sequence blueprint (which we'll call a ``fluprint''). This fluprint can be discovered through machine learning. Experiments that deoptimize many loci indiscriminatively will change this fluprint. We hypothesize that what these protocols really do is change a virus'es host specificity, resulting in reduced viability. This line of argument has a long history: Early vaccines were nothing but pathogens from a from close disease variant, isolated from a different host. For example, E. Jenner used the cow pox virus to immunize against the human pox virus~\cite{Riedel2005-pt}.
+    \item As a side effect, this inquiry might also elucidate how IAV is able to cross species barriers so frequently. If the constructed fluprint were correct, we should find mixed ``host signals'' in sequences from IAV that are known to have crossed this barrier, e.g. isolates from humans infected with an avian influenza strain.
+\end{enumerate}
+
+
+Interestingly/ Sadly, hypothesis (b) was already confirmed, which we learned after carrying out initial experiments~\cite{Eng2014-ar, Eng2016-bg}. Consequently we dropped this line of investigation. The authors use the protein sequence to classify host tropism, while we worked on the nucleotide sequence. Interestingly, random forests were used for classification, which as a machine learning technique has close ties to \gls{gbt}.
+
+Hypothesis (a) led to mixed results. We assessed deoptimized \gls{iav} genomes retrospectively. Besides a small sample ($n = 8$ including wild type) the main problem with our inquiry was the heuristic construction of the deoptimized genomes. Certain metrics were targeted during the genome construction, such as GC content and the ``amount'' of deoptimization, all of them reasonable in the light of reports in the literature. However, no systematic deoptimization was carried out.
+
+To exhaust all combinatorial combinations of deoptimized codons is infeasible even for short viral genomes. However, a merely heuristic approach has limited scope and is unlikely to target the codons with the highest effects on virus viability. Even if by chance this should succeed, there is little more explanation as to why the deoptimized codons should effect viability other than ``Well, because they do''.
+
+Our approach to this problem first assumes that some property of the sequences - such as their host species - is related to virus viability. We then use a \gls{gbt} classifier to learn which nucleotide positions are most important in separating the genome sequences according to this property. This approach has some advantages:
+
+\begin{itemize}
+    \item It does not rely on heuristic assumptions about particular sites in the genome and is thus less prone to systematic biases.
+    \item An arbitrary set of properties can be explored, such as host species, geographic location or point in time.
+    \item The result can be directly interpreted (from a statistical viewpoint) and generates biological hypotheses, that can be followed up. For example, if certain nucleotide positions hold large feature importance, we might then investigate their role in the secondary structure of the genome, and how the latter might change if we deoptimized them.
+    \item The search space of which positions to deoptimize can be prioritized, targeting sites of high feature importance in decreasing order.
+\end{itemize}
+
+As concerns our current results on the available deoptimized genomes, we cannot make tested assertions about the viability of our approach, and it remains a proof of concept. In further prospective experiments, we will generate the necessary ``wet lab'' data to do so.
+
+Another approach we will test in the future is the use of neural networks instead of GBTs. The main limitation of our approach is that a target property, such as host species, has to be selected a priori. With deep learning we will try to learn a feature embedding of the genome sequences without this.
+
+
+\subsection{Limitations of zoo}
+
+zoo exposes many technical details to the user. In the future it will provide more abstractions to simplify the user interface. This will allow people from less technically minded backgrounds to use the software too.
+
+Currently zoo does not address curation explicitely, i.e. it is not possible to systematically query a given dataset by curation status, such as "hand-crafted" our "automatic". Furthermore, authentication and right restrictions are not implemented. These points will be addressed once the underlying engine is robustly implemented.
+
+Although we were able to mitigate many of the shortcoming of relational databases, mostly concerning the rigid schema they are designed around, MongoDB did present its own limitations.
+
+The maximum document size is 16 mb, which means that for any sequence data above the size of viruses it is not possible to embed the sequence data in the document. However, by using linked information we were able to mitigate this with only a small performance cost. We did not use MongoDBs GridFS feature, which allows to store arbitrarily large blobs of binary data, because we did not want to add yet another format to the multitude of bioinformatic formats already in existence and in use in zoo. Because many formats can be indexed, lookup scales linearly, so the need to use GridFS was not apparent.
+
+In order to allow efficient updates to the database, we used a diff-based approach, which means that only changes to documents are exchanged and applied. This approach proved brittle in cases where to much flexibility was allowed in the JSON schema, because the diff algorithm did not cover certain edge cases. In the future we will adopt a fact-oriented approach (see below) which allows efficient communication of changes without sending diffs.
+
+There are many formats that transmit data over some wire. Most popular among them in the realm of computational biology are arguably XML and JSON. We decided to use the latter due to its wide adoption and its readibility. We also wanted to allow streaming in our communication protocols, and newline-delimited JSON allows that because there is no in-band schema or header transferred.
+
+However, JSON is a very limited format in that it is not extendible, which means that it supports only a handful of types. Dates, sets and more arbitrary types cannot be encoded in the format. The correct usage of these fields requires context.
+
+
+\subsection{tripl: A Refactoring of zoo's Database Functionality}
+
+The refactoring of zoo's data management is called ``tripl'' and is a joint development effort with C. Small of the Fred Hutchinson Cancer Research Center, Seattle, US \\ (\hyperlink{https://github.com/metasoarous/tripl}{github.com/metasoarous/tripl}).
+
+The tripl data format for ``all the things'', inspired by the Datomic database and the Semantic Web that has:
+
+\begin{itemize}
+    \item explicit, global meaning and context
+    \item an easy document-store like write semantic
+    \item capable of expressing arbitrary graph data
+    \item is extensible and polymorphic
+    \item primarily targets JSON for reach and interoperability
+    \item theoretical underpinnings in RDF, with a simpler data-oriented buy-in model
+\end{itemize}
+
+Tripl can be created and used from any language with a natural interpretation of JSON data. However, getting the most out of the implied graph structure of the data requires some tooling - though not much: The first passable version of this tool was only 120 lines of (Python) code. Tripl's aim is to solve this problem via a minimally constrained JSON usage pattern.
+
+Every entity must have a globally unique identity, represented as a string, typically either a namespaced keyword, a UUID, or a URI.
+
+Every entity can be asserted via \colorbox{red-very-light}{\lstinline{db:ident}} in a dictionary/ hash map form.
+
+If a dictionary/ map is asserted without a globally unique identity, a random UUID will be assigned.
+
+Attributes should be namespaced keywords:
+
+\begin{itemize}
+    \item ``name'' means nothing as an identifier if used variously among different dictionaries/ maps in different places
+    \item ``person:name'' and ``company:name'' as attributes unambiguously describe what their corresponding values mean, independent of the context of the corresponding entity
+\end{itemize}
+
+Values must also be serializable and hashable in JSON and any languages used to interact with the data.
+
+Tripl is designed so that any database engine that can query a graph-like data model can be used as a backend.

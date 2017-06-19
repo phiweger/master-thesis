@@ -123,7 +123,7 @@ from zoo.align import msa_subset
 from zoo.learn import entropy_select
 
 
-sys.path.append('/Users/pi/commonplace/compbio/protocols/utils')
+sys.path.append('.../utils')
 from one_hot_encoding import ohe_matrix
 from shannon import shannon
 from chunk import chunk
@@ -213,7 +213,7 @@ for i in query:
 query = get_id(collection, list(X))
 '''
 
-fp = '/Users/pi/data/influenza/mod/msa/subset_NA.fa'
+fp = '.../subset_NA.fa'
 to_fasta(fp, iter_seq(query, annotation=ANNO))  # save coding sequence
 
 
@@ -223,7 +223,7 @@ to_fasta(fp, iter_seq(query, annotation=ANNO))  # save coding sequence
 
 
 ''' shell
-python ~/commonplace/compbio/protocols/alignment/msa/codon_msa.py subset.fa
+python .../codon_msa.py subset.fa
 # creates codon.fa and protein.fa
 
 # or if codon alignment not necessary
@@ -237,7 +237,7 @@ mafft --thread -1 subset_NA.fa > subset_NA.mafft.fa
 3. From MSA, create train and test set.
 '''
 
-fp_msa = '/Users/pi/data/influenza/mod/msa/NA/subset_NA.mafft.fa'
+fp_msa = '.../subset_NA.mafft.fa'
 # fp_msa = '/Users/pi/data/influenza/mod/msa/codon.fa'
 msa = TabularMSA.read(
     fp_msa, format='fasta', constructor=DNA, lowercase=True)
@@ -294,7 +294,7 @@ l = []
 C = np.apply_along_axis(Counter, axis=0, arr=M)
 counter = 0
 # fp_out = '/Users/pi/data/influenza/mod/msa/conserved_train.tsv'
-fp_out = '/Users/pi/data/influenza/mod/msa/NA/conserved_train.tsv'
+fp_out = '.../conserved_train.tsv'
 
 
 with open(fp_out, 'w+') as outfile:
@@ -310,7 +310,7 @@ with open(fp_out, 'w+') as outfile:
 # to compare, test data (matrix N)
 C = np.apply_along_axis(Counter, axis=0, arr=N)
 counter = 0
-fp_out = '/Users/pi/data/influenza/mod/msa/conserved_test.tsv'
+fp_out = '.../conserved_test.tsv'
 with open(fp_out, 'w+') as outfile:
     for c in C:
         counts = [value for (key, value) in c.items() if key in actg]
@@ -451,8 +451,8 @@ df = pd.DataFrame(x_scaled)
 ''' R
 library(ggplot2)
 
-fp <- '/Users/pi/data/influenza/mod/feature_importance/PA_random100_repeat20.csv'
-df <- read.table('~/tmp/fi_rep.csv', header=F, stringsAsFactors=F, sep=',')
+fp <- '.../PA_random100_repeat20.csv'
+df <- read.table('.../fi_rep.csv', header=F, stringsAsFactors=F, sep=',')
 names(df) <- c('pos', 'rep', 'val')
 
 p <-
@@ -468,7 +468,7 @@ ggplot(df, aes(x=as.factor(rep), y=val)) +
     xlab('position')
     # scale_y_continuous(limits=c(0, 0.1))
 
-fp_img = '/Users/pi/projects/influenza/img/feature_importance/PA_random100_repeat20_log.png'
+fp_img = '.../PA_random100_repeat20_log.png'
 ggsave(fp_img, p, width=20, height=5, units='cm')
 '''
 
@@ -536,7 +536,7 @@ chunks = chunk(4, clf.feature_importances_)
 feat_imp = ['%.3f' % round(sum(i), 3) for i in chunks]  # stackoverflow, 56820
 feat_ent = entropy[selection]
 
-fp_out = '/Users/pi/data/influenza/mod/msa/feat_importance_entropy.tsv'
+fp_out = '.../feat_importance_entropy.tsv'
 with open(fp_out, 'w+') as outfile:
     outfile.write('{}\t{}\n'.format('entropy', 'importance'))
     for i in zip(feat_ent, feat_imp):
@@ -659,12 +659,12 @@ Appendix: Vis.
 
 library(ggplot2)
 
-fp_train <- '~/data/influenza/mod/msa/conserved_train.tsv'
+fp_train <- '.../conserved_train.tsv'
 df_train <- read.table(fp_train, sep='\t', stringsAsFactors=F, header=F)
 names(df_train) = c('index', 'entropy', 'sum')
 df_train$label = 'training'
 
-fp_test <- '~/data/influenza/mod/msa/conserved_test.tsv'
+fp_test <- '.../conserved_test.tsv'
 df_test <- read.table(fp_test, sep='\t', stringsAsFactors=F, header=F)
 names(df_test) = c('index', 'entropy', 'sum')
 df_test$label = 'test'
@@ -702,7 +702,7 @@ theme_default <- function(
 ggplot(df[df$label == 'training',], aes(x=entropy)) +
     geom_freqpoly() +
     theme_default()
-fp_out = '~/projects/influenza/img/entropy_PA_freqpoly.pdf'
+fp_out = '.../entropy_PA_freqpoly.pdf'
 ggsave(fp_out, height=5, width=5, unit='cm')
 
 # ggplot(df, aes(x=entropy, color=label)) +
@@ -716,7 +716,7 @@ ggsave(fp_out, height=5, width=5, unit='cm')
 ggplot(df[df$label == 'training',], aes(x=index, y=entropy)) +
     geom_point(size=0.1) +
     theme_default()
-fp_out = '~/projects/influenza/img/entropy_PA_train_test.pdf'
+fp_out = '.../entropy_PA_train_test.pdf'
 ggsave(fp_out, height=5, width=7.5, unit='cm')
 
 
@@ -725,7 +725,7 @@ names(delta) <- "delta"
 ggplot(delta, aes(x=delta)) +
     geom_histogram(fill='white', color='black') +
     theme_default()
-fp_out = '~/projects/influenza/img/entropy_PA_delta.pdf'
+fp_out = '.../entropy_PA_delta.pdf'
 ggsave(fp_out, height=5, width=7.5, unit='cm')
 
 
@@ -736,7 +736,7 @@ ggplot(df, aes(x=entropy, y=importance)) +
     geom_point(size=0.5) +
     scale_y_log10() +
     theme_default()
-fp_out = '~/projects/influenza/img/entropy_PA_feat_importance.pdf'
+fp_out = '.../entropy_PA_feat_importance.pdf'
 ggsave(fp_out, height=5, width=5, unit='cm')
 
 '''
@@ -748,7 +748,7 @@ ggsave(fp_out, height=5, width=5, unit='cm')
 
 # ----------------------------------------------------------------------------
 
-fp_msa = '/Users/pi/data/influenza/mod/msa/deprecated/train/codon.fa'
+fp_msa = '.../codon.fa'
 msa = TabularMSA.read(
     fp_msa, format='fasta', constructor=DNA, lowercase=True)
 
@@ -779,7 +779,7 @@ Manually coding this w/o the introduction of all the nans.
 
 actg = ['A', 'C', 'T', 'G']
 counter = 0
-fp_out = '/Users/pi/data/influenza/mod/msa/deprecated/train/conserved.tsv'
+fp_out = '.../conserved.tsv'
 bar = progressbar.ProgressBar(max_value=progressbar.UnknownLength)
 
 
@@ -801,12 +801,12 @@ with open(fp_out, 'w+') as outfile:
 
 library(ggplot2)
 
-fp_train <- '~/data/influenza/mod/msa/conserved_train.tsv'
+fp_train <- '.../conserved_train.tsv'
 df_train <- read.table(fp_train, sep='\t', stringsAsFactors=F, header=F)
 names(df_train) = c('index', 'entropy', 'sum')
 df_train$label = 'training'
 
-fp_test <- '~/data/influenza/mod/msa/conserved_test.tsv'
+fp_test <- '.../conserved_test.tsv'
 df_test <- read.table(fp_test, sep='\t', stringsAsFactors=F, header=F)
 names(df_test) = c('index', 'entropy', 'sum')
 df_test$label = 'test'
@@ -846,7 +846,7 @@ ggplot(df[df$entropy>0,], aes(x=index, y=entropy, color=entropy)) +
     scale_color_gradient(high='#8F2727', low='#DCBCBC') +
     theme_default()
 
-fp_out = '~/projects/influenza/img/entropy_PA.pdf'
+fp_out = '.../entropy_PA.pdf'
 ggsave(fp_out, height=5, width=10, unit='cm')
 
 
@@ -854,7 +854,7 @@ ggplot(df[df$entropy>0,], aes(x=entropy)) +
     geom_freqpoly() +
     theme_default()
 
-fp_out = '~/projects/influenza/img/entropy_PA_freqpoly.pdf'
+fp_out = '.../entropy_PA_freqpoly.pdf'
 ggsave(fp_out, height=5, width=5, unit='cm')
 
 
@@ -870,7 +870,7 @@ ggplot(df, aes(x=index, y=entropy)) +
     #scale_color_gradient(high='#8F2727', low='#DCBCBC') +
     theme_default()
 
-fp_out = '~/projects/influenza/img/entropy_PA_train_test.pdf'
+fp_out = '.../entropy_PA_train_test.pdf'
 ggsave(fp_out, height=5, width=10, unit='cm')
 '''
 
@@ -904,7 +904,7 @@ X
 '''
 
 
-fp_conserved = '/Users/pi/data/influenza/mod/msa/deprecated/train/conserved.tsv'
+fp_conserved = '.../conserved.tsv'
 entropy = []
 with open(fp_conserved, 'r+') as infile:
     file = infile.readlines()[1:]  # skip header
@@ -1005,7 +1005,7 @@ All          702    747    607  2056
 The real test data.
 '''
 
-fp_msa = '/Users/pi/data/influenza/mod/msa/test/codon.fa'
+fp_msa = '.../codon.fa'
 msa = TabularMSA.read(
     fp_msa, format='fasta', constructor=DNA, lowercase=True)
 
@@ -1043,5 +1043,3 @@ pd.crosstab(
     rownames=['True'],
     colnames=['Predicted'],
     margins=True)
-
-

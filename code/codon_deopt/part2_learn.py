@@ -4,7 +4,7 @@ transition matrix, codon, codon bias
 
 
 import sys
-sys.path.append('/Users/pi/commonplace/compbio/protocols/utils')
+sys.path.append('.../utils')
 from chunk import chunk
 
 # sum(clf.feature_importances_ > 0.01)
@@ -35,7 +35,7 @@ a = list(chunk(4, clf.feature_importances_))
 df = pd.DataFrame.from_records(a)
 df.columns = 'A C T G'.split(' ')
 df.unstack().reset_index().to_csv(
-    '/Users/pi/data/influenza/mod/feature_importance/fi_NA.csv',
+    '.../fi_NA.csv',
     header=None, index=False)
 
 
@@ -44,7 +44,7 @@ Write out entropy.
 '''
 s = pd.Series(entropy)
 s.to_csv(
-    '/Users/pi/data/influenza/mod/feature_importance/entropy_NA.csv',
+    '.../entropy_NA.csv',
     index=True, header=None)
 
 
@@ -59,7 +59,7 @@ s.to_csv(
 library(ggplot2)
 # library(superheat)  # https://github.com/rlbarter/superheat
 
-fp <- '/Users/pi/data/influenza/mod/feature_importance/fi_square_PA.csv'
+fp <- '.../fi_square_PA.csv'
 df <- read.table(fp, header=F, stringsAsFactors=F, sep=',')
 names(df) <- c('nt', 'pos', 'val')
 
@@ -101,7 +101,7 @@ ggplot(df, aes(x=pos, y=val, color=as.factor(nt))) +
     scale_color_discrete(guide = guide_legend(title = 'nt'))
 
 
-fp_out = '~/projects/influenza/img/feature_importance/points_PA.pdf'
+fp_out = '.../points_PA.pdf'
 ggsave(fp_out, r, height=5, width=10, unit='cm')
 '''
 
@@ -125,7 +125,7 @@ for lr in [0.5, 0.25, 0.1, 0.05, 0.025, 0.01]:
     l.append(clf.feature_importances_)
 
 
-fp = '/Users/pi/data/influenza/mod/feature_importance/PA_regularized.csv'
+fp = '.../PA_regularized.csv'
 df = pd.DataFrame.from_records(l)
 
 # df.transpose().unstack().reset_index().to_csv(
@@ -151,7 +151,7 @@ result.to_csv(fp, header='nt pos val lr'.split(' '), index=False)
 ''' R
 library(ggplot2)
 
-fp <- '/Users/pi/data/influenza/mod/feature_importance/PA_regularized.csv'
+fp <- '.../PA_regularized.csv'
 df <- read.table(fp, header=T, stringsAsFactors=F, sep=',')
 
 p <-
@@ -165,7 +165,7 @@ ggplot(df, aes(x=pos, y=val, color=as.factor(nt))) +
     facet_wrap(~ as.factor(lr), ncol=1, scale='free')
 
 
-fp_out = '~/projects/influenza/img/feature_importance/points_PA_regularized.pdf'
+fp_out = '.../points_PA_regularized.pdf'
 ggsave(fp_out, p, height=20, width=8, unit='cm')
 '''
 
@@ -177,9 +177,9 @@ library(ggplot2)
 library(dplyr)
 
 
-fp_f <- '/Users/pi/data/influenza/mod/feature_importance/fi_NA.csv'
-fp_h <- '/Users/pi/data/influenza/mod/feature_importance/entropy_NA.csv'
-fp_m <- '/Users/pi/data/influenza/mod/feature_importance/mismatch_DL_NA.csv'
+fp_f <- '.../fi_NA.csv'
+fp_h <- '.../entropy_NA.csv'
+fp_m <- '.../mismatch_DL_NA.csv'
 
 df_h <- read.table(fp_h, header=F, stringsAsFactors=F, sep=',')
 names(df_h) <- c('pos', 'h')
@@ -221,7 +221,7 @@ ggplot(df, aes(x=pos, y=sqrt(fi), color=h)) +
         low='#DCBCBC', high='#8F2727'
         )
 
-fp_out = '~/projects/influenza/img/feature_importance/NA_fi_entropy_1.pdf'
+fp_out = '.../NA_fi_entropy_1.pdf'
 ggsave(fp_out, r, height=15, width=8, unit='cm')
 
 
@@ -236,7 +236,7 @@ ggplot(df, aes(x=pos, y=h)) +
     xlab('i') +
     ylab('H')
 
-fp_out = '~/projects/influenza/img/feature_importance/NA_fi_entropy_2.pdf'
+fp_out = '.../NA_fi_entropy_2.pdf'
 ggsave(fp_out, s, height=5, width=5, unit='cm')
 
 
@@ -250,7 +250,7 @@ ggplot(df, aes(x=h, y=sqrt(fi))) +
     xlab('H') +
     ylab(expression(sqrt(F)))
 
-fp_out = '~/projects/influenza/img/feature_importance/NA_fi_entropy_3.pdf'
+fp_out = '.../NA_fi_entropy_3.pdf'
 ggsave(fp_out, t, height=5, width=5, unit='cm')
 
 
@@ -265,7 +265,7 @@ ggplot(df_f, aes(x=pos, y=sqrt(fi))) +
     xlab('i') +
     ylab(expression(sqrt(F)))
 
-fp_out = '~/projects/influenza/img/feature_importance/NA_fi_entropy_4.pdf'
+fp_out = '.../NA_fi_entropy_4.pdf'
 ggsave(fp_out, u, height=16, width=5, unit='cm')
 
 
@@ -308,10 +308,7 @@ ggplot(
         )
 
 
-fp_out = '~/projects/influenza/img/feature_importance/NA_fi_deopt_DL.pdf'
+fp_out = '.../NA_fi_deopt_DL.pdf'
 ggsave(fp_out, v, height=16, width=7, unit='cm')
 
 '''
-
-
-
